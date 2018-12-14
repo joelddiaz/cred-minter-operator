@@ -47,7 +47,7 @@ import (
 // and Start it when the Manager is Started.
 // USER ACTION REQUIRED: update cmd/manager/main.go to call this credminter.Add(mgr) to install this Controller
 func Add(mgr manager.Manager) error {
-	log.Info("Addming cred-minter operator to manager")
+	log.Info("Adding cred-minter operator to manager")
 	return add(mgr, newReconciler(mgr))
 }
 
@@ -59,7 +59,7 @@ func newReconciler(mgr manager.Manager) reconcile.Reconciler {
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
 func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	// Create a new controller
-	c, err := controller.New("credminteroperatorconfig-controller", mgr, controller.Options{Reconciler: r})
+	c, err := controller.New("credminteroperator-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
 		return err
 	}
@@ -88,7 +88,8 @@ var _ reconcile.Reconciler = &ReconcileCredMinterOperatorConfig{}
 // ReconcileCredMinterOperatorConfig reconciles a CredMinterOperatorConfig object
 type ReconcileCredMinterOperatorConfig struct {
 	client.Client
-	scheme *runtime.Scheme
+	scheme        *runtime.Scheme
+	imagePullSpec string
 }
 
 // Reconcile reads that state of the cluster for a CredMinterOperatorConfig object and makes changes based on the state read

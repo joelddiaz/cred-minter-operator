@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	operatorsv1 "github.com/openshift/api/operator/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -25,14 +26,14 @@ import (
 
 // CredMinterOperatorConfigSpec defines the desired state of CredMinterOperatorConfig
 type CredMinterOperatorConfigSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// logLevel is the level of logging for the cred-minter controller
+	// Valid values: debug, info, warning, error, fatal
+	LogLevel string `json:"logLevel,omitempty"`
 }
 
 // CredMinterOperatorConfigStatus defines the observed state of CredMinterOperatorConfig
 type CredMinterOperatorConfigStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	operatorsv1.OperatorStatus `json:",inline"`
 }
 
 // +genclient

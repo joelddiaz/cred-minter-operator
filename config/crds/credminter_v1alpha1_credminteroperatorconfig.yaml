@@ -21,8 +21,68 @@ spec:
         metadata:
           type: object
         spec:
+          properties:
+            logLevel:
+              type: string
           type: object
         status:
+          properties:
+            conditions:
+              items:
+                properties:
+                  lastTransitionTime:
+                    format: date-time
+                    type: string
+                  message:
+                    type: string
+                  reason:
+                    type: string
+                  status:
+                    type: string
+                  type:
+                    type: string
+                required:
+                - type
+                - status
+                type: object
+              type: array
+            generations:
+              items:
+                properties:
+                  group:
+                    type: string
+                  hash:
+                    type: string
+                  lastGeneration:
+                    format: int64
+                    type: integer
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                  resource:
+                    type: string
+                required:
+                - group
+                - resource
+                - namespace
+                - name
+                - lastGeneration
+                - hash
+                type: object
+              type: array
+            observedGeneration:
+              format: int64
+              type: integer
+            readyReplicas:
+              format: int32
+              type: integer
+            version:
+              type: string
+          required:
+          - version
+          - readyReplicas
+          - generations
           type: object
   version: v1alpha1
 status:

@@ -312,6 +312,59 @@
   version = "v1.4.3"
 
 [[projects]]
+  branch = "master"
+  digest = "1:43376707ea2443d4d59265c5abd59dbb92d7e08c05f8162a6a06a19dbfff0ffa"
+  name = "github.com/openshift/api"
+  packages = [
+    ".",
+    "apps",
+    "apps/v1",
+    "authorization",
+    "authorization/v1",
+    "build",
+    "build/v1",
+    "config",
+    "config/v1",
+    "image",
+    "image/docker10",
+    "image/dockerpre012",
+    "image/v1",
+    "kubecontrolplane",
+    "kubecontrolplane/v1",
+    "legacyconfig/v1",
+    "network",
+    "network/v1",
+    "oauth",
+    "oauth/v1",
+    "openshiftcontrolplane",
+    "openshiftcontrolplane/v1",
+    "operator",
+    "operator/v1",
+    "operator/v1alpha1",
+    "osin",
+    "osin/v1",
+    "pkg/serialization",
+    "project",
+    "project/v1",
+    "quota",
+    "quota/v1",
+    "route",
+    "route/v1",
+    "security",
+    "security/v1",
+    "servicecertsigner",
+    "servicecertsigner/v1alpha1",
+    "template",
+    "template/v1",
+    "user",
+    "user/v1",
+    "webconsole",
+    "webconsole/v1",
+  ]
+  pruneopts = "T"
+  revision = "83b2fe56301417028bd52e56edd75768e2ea051c"
+
+[[projects]]
   digest = "1:e5d0bd87abc2781d14e274807a470acd180f0499f8bf5bb18606e9ec22ad9de9"
   name = "github.com/pborman/uuid"
   packages = ["."]
@@ -656,6 +709,7 @@
     "core/v1",
     "events/v1beta1",
     "extensions/v1beta1",
+    "imagepolicy/v1alpha1",
     "networking/v1",
     "policy/v1beta1",
     "rbac/v1",
@@ -948,6 +1002,7 @@
     "github.com/emicklei/go-restful",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
+    "github.com/openshift/api",
     "github.com/sirupsen/logrus",
     "golang.org/x/net/context",
     "k8s.io/api/apps/v1",
