@@ -20,7 +20,7 @@ import (
 	"os"
 
 	"github.com/openshift/cred-minter-operator/pkg/apis"
-	"github.com/openshift/cred-minter-operator/pkg/controller"
+	"github.com/openshift/cred-minter-operator/pkg/operator"
 	"github.com/openshift/cred-minter-operator/pkg/webhook"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
@@ -60,7 +60,7 @@ func main() {
 
 	// Setup all Controllers
 	log.Info("Setting up controller")
-	if err := controller.AddToManager(mgr); err != nil {
+	if err := operator.AddToManager(mgr); err != nil {
 		log.Error(err, "unable to register controllers to the manager")
 		os.Exit(1)
 	}
