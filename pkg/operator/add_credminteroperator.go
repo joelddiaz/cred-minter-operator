@@ -17,10 +17,10 @@ limitations under the License.
 package operator
 
 import (
-	"github.com/openshift/cred-minter-operator/pkg/operator/credminteroperatorconfig"
+	"github.com/openshift/cred-minter-operator/pkg/operator/credminteroperator"
 )
 
 func init() {
 	// AddToManagerFuncs is a list of functions to create controllers and add them to a manager.
-	AddToManagerFuncs = append(AddToManagerFuncs, credminteroperatorconfig.Add)
+	AddToManagerFuncs = append(AddToManagerFuncs, credminteroperator.Add)
 }

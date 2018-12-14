@@ -14,12 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package credminteroperatorconfig
+package credminteroperator
 
 import (
 	"context"
-	"log"
 	"reflect"
+
+	log "github.com/sirupsen/logrus"
 
 	credminterv1alpha1 "github.com/openshift/cred-minter-operator/pkg/apis/credminter/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
@@ -46,6 +47,7 @@ import (
 // and Start it when the Manager is Started.
 // USER ACTION REQUIRED: update cmd/manager/main.go to call this credminter.Add(mgr) to install this Controller
 func Add(mgr manager.Manager) error {
+	log.Info("Addming cred-minter operator to manager")
 	return add(mgr, newReconciler(mgr))
 }
 
