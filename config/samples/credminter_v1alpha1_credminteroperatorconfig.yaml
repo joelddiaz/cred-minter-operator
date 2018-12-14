@@ -1,0 +1,9 @@
+apiVersion: credminter.operator.openshift.io/v1alpha1
+kind: CredMinterOperatorConfig
+metadata:
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: credminteroperatorconfig-sample
+spec:
+  # Add fields here
+  foo: bar
