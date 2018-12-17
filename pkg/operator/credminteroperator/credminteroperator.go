@@ -18,6 +18,8 @@ package credminteroperator
 
 import (
 	"context"
+	"fmt"
+	"os"
 	"reflect"
 
 	log "github.com/sirupsen/logrus"
@@ -29,6 +31,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/dynamic"
+	kubeclient "k8s.io/client-go/kubernetes"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -36,6 +40,15 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"sigs.k8s.io/controller-runtime/pkg/source"
+
+	"github.com/openshift/library-go/pkg/operator/events"
+	////credminterv1 "github.com/openshift/cred-minter-operator/pkg/apis/credminter/v1alpha1"
+	////"github.com/openshift/cred-minter-operator/pkg/operator/assets"
+	////"github.com/openshift/library-go/pkg/operator/v1helpers"
+)
+
+const (
+	operatorNamespace = "cred-minter-operator-system"
 )
 
 /**
@@ -58,6 +71,38 @@ func newReconciler(mgr manager.Manager) reconcile.Reconciler {
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
 func add(mgr manager.Manager, r reconcile.Reconciler) error {
+	// CONFIG INSTANCE?
+	_, err := dynamic.NewForConfig(mgr.GetConfig())
+	if err != nil {
+		return err
+	}
+	/*
+		v1helpers.EnsureOperatorConfigExists(
+			dynamicClient,
+			assets.MustAsset("config/operator-config.yaml"),
+			schema.GroupVersionResource{
+				Group:    credminterv1.SchemeGroupVersion.Group,
+				Version:  "v1alpha1",
+				Resource: "credminteroperatorconfigs",
+			},
+		)
+	*/
+
+	credminterConfigReconciler := r.(*ReconcileCredMinterOperatorConfig)
+
+	credminterConfigReconciler.imagePullSpec = os.Getenv("IMAGE")
+	if len(credminterConfigReconciler.imagePullSpec) == 0 {
+		log.Warn("no IMAGE specified, using bleeding edge")
+		credminterConfigReconciler.imagePullSpec = "quay.io/dgoodwin/cred-minter:latest"
+	}
+
+	credminterConfigReconciler.kubeClient, err = kubeclient.NewForConfig(mgr.GetConfig())
+	if err != nil {
+		return fmt.Errorf("error creating kubeClient: %v", err)
+	}
+
+	credminterConfigReconciler.eventRecorder = setupEventRecorder(credminterConfigReconciler.kubeClient)
+
 	// Create a new controller
 	c, err := controller.New("credminteroperator-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
@@ -70,8 +115,6 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 		return err
 	}
 
-	// TODO(user): Modify this to be the types you create
-	// Uncomment watch a Deployment created by CredMinterOperatorConfig - change this for objects you create
 	err = c.Watch(&source.Kind{Type: &appsv1.Deployment{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
 		OwnerType:    &credminterv1alpha1.CredMinterOperatorConfig{},
@@ -89,6 +132,8 @@ var _ reconcile.Reconciler = &ReconcileCredMinterOperatorConfig{}
 type ReconcileCredMinterOperatorConfig struct {
 	client.Client
 	scheme        *runtime.Scheme
+	kubeClient    kubeclient.Interface
+	eventRecorder events.Recorder
 	imagePullSpec string
 }
 
@@ -130,7 +175,7 @@ func (r *ReconcileCredMinterOperatorConfig) Reconcile(request reconcile.Request)
 					Containers: []corev1.Container{
 						{
 							Name:  "nginx",
-							Image: "nginx",
+							Image: r.imagePullSpec,
 						},
 					},
 				},
@@ -166,4 +211,37 @@ func (r *ReconcileCredMinterOperatorConfig) Reconcile(request reconcile.Request)
 		}
 	}
 	return reconcile.Result{}, nil
+}
+
+func setupEventRecorder(kubeClient kubeclient.Interface) events.Recorder {
+	controllerRef, err := events.GetControllerReferenceForCurrentPod(kubeClient, operatorNamespace, nil)
+	if err != nil {
+		log.WithError(err).Warning("Cannot determine pod name for event recorder. Using logger.")
+		return getLogRecorder()
+	}
+
+	eventsClient := kubeClient.CoreV1().Events(controllerRef.Namespace)
+	return events.NewRecorder(eventsClient, operatorNamespace, controllerRef)
+}
+
+type logRecorder struct{}
+
+func (logRecorder) Event(reason, message string) {
+	log.WithField("reason", reason).Info(message)
+}
+
+func (logRecorder) Eventf(reason, messageFmt string, args ...interface{}) {
+	log.WithField("reason", reason).Infof(messageFmt, args...)
+}
+
+func (logRecorder) Warning(reason, message string) {
+	log.WithField("reason", reason).Warning(message)
+}
+
+func (logRecorder) Warningf(reason, messageFmt string, args ...interface{}) {
+	log.WithField("reason", reason).Warningf(messageFmt, args...)
+}
+
+func getLogRecorder() events.Recorder {
+	return &logRecorder{}
 }

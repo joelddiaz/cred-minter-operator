@@ -214,6 +214,14 @@
   version = "v1.1.5"
 
 [[projects]]
+  digest = "1:9f45b3f05c749a97b1423b5e7874cd19ae0452db5d107468e2d7d9c805435df0"
+  name = "github.com/jteeuwen/go-bindata"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "bbd0c6e271208dce66d8fda4bc536453cd27fc4a"
+  version = "v3.0.7"
+
+[[projects]]
   digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
   name = "github.com/konsorten/go-windows-terminal-sequences"
   packages = ["."]
@@ -316,53 +324,19 @@
   digest = "1:43376707ea2443d4d59265c5abd59dbb92d7e08c05f8162a6a06a19dbfff0ffa"
   name = "github.com/openshift/api"
   packages = [
-    ".",
-    "apps",
-    "apps/v1",
-    "authorization",
-    "authorization/v1",
-    "build",
-    "build/v1",
-    "config",
     "config/v1",
-    "image",
-    "image/docker10",
-    "image/dockerpre012",
-    "image/v1",
-    "kubecontrolplane",
-    "kubecontrolplane/v1",
-    "legacyconfig/v1",
-    "network",
-    "network/v1",
-    "oauth",
-    "oauth/v1",
-    "openshiftcontrolplane",
-    "openshiftcontrolplane/v1",
-    "operator",
     "operator/v1",
-    "operator/v1alpha1",
-    "osin",
-    "osin/v1",
-    "pkg/serialization",
-    "project",
-    "project/v1",
-    "quota",
-    "quota/v1",
-    "route",
-    "route/v1",
-    "security",
-    "security/v1",
-    "servicecertsigner",
-    "servicecertsigner/v1alpha1",
-    "template",
-    "template/v1",
-    "user",
-    "user/v1",
-    "webconsole",
-    "webconsole/v1",
   ]
   pruneopts = "T"
   revision = "83b2fe56301417028bd52e56edd75768e2ea051c"
+
+[[projects]]
+  branch = "master"
+  digest = "1:ce0416dfd0c72144ef1d99d8dd9c487eab725af4274836859aaaf85754bfc378"
+  name = "github.com/openshift/library-go"
+  packages = ["pkg/operator/v1helpers"]
+  pruneopts = "T"
+  revision = "b777fce1d621d4223e8fb2384d9b3a97debba24d"
 
 [[projects]]
   digest = "1:e5d0bd87abc2781d14e274807a470acd180f0499f8bf5bb18606e9ec22ad9de9"
@@ -709,7 +683,6 @@
     "core/v1",
     "events/v1beta1",
     "extensions/v1beta1",
-    "imagepolicy/v1alpha1",
     "networking/v1",
     "policy/v1beta1",
     "rbac/v1",
@@ -744,6 +717,7 @@
   digest = "1:bcf693d144a1d98dabdb4ab3bf18fbde8b2f7ee86d2fd8a3f74fb6a035627550"
   name = "k8s.io/apimachinery"
   packages = [
+    "pkg/api/equality",
     "pkg/api/errors",
     "pkg/api/meta",
     "pkg/api/resource",
@@ -1000,9 +974,11 @@
   analyzer-version = 1
   input-imports = [
     "github.com/emicklei/go-restful",
+    "github.com/jteeuwen/go-bindata",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
-    "github.com/openshift/api",
+    "github.com/openshift/api/operator/v1",
+    "github.com/openshift/library-go/pkg/operator/v1helpers",
     "github.com/sirupsen/logrus",
     "golang.org/x/net/context",
     "k8s.io/api/apps/v1",
@@ -1013,6 +989,7 @@
     "k8s.io/apimachinery/pkg/runtime",
     "k8s.io/apimachinery/pkg/runtime/schema",
     "k8s.io/apimachinery/pkg/types",
+    "k8s.io/client-go/dynamic",
     "k8s.io/client-go/kubernetes/scheme",
     "k8s.io/client-go/plugin/pkg/client/auth/gcp",
     "k8s.io/client-go/rest",
