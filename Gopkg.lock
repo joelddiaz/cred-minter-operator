@@ -382,7 +382,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:ce0416dfd0c72144ef1d99d8dd9c487eab725af4274836859aaaf85754bfc378"
+  digest = "1:8ef68dfecfad56894913a065df5bf9d809439a847f3f264539bc6301291f6bd4"
   name = "github.com/openshift/library-go"
   packages = [
     "pkg/operator/events",
@@ -391,7 +391,7 @@
     "pkg/operator/v1alpha1helpers",
   ]
   pruneopts = "T"
-  revision = "b777fce1d621d4223e8fb2384d9b3a97debba24d"
+  revision = "2dea7f3f68892fa07254c0b55b59864ce4019f0f"
 
 [[projects]]
   digest = "1:e5d0bd87abc2781d14e274807a470acd180f0499f8bf5bb18606e9ec22ad9de9"
@@ -714,7 +714,7 @@
   version = "v2.2.2"
 
 [[projects]]
-  digest = "1:8a1af4b4d5b51e3f8d6ec2a44467e8505e25e29814c2557d1d9717834065c674"
+  digest = "1:8b350a07b9e6aad42a26123a22d94d5498081214fd776b2b0336cb5c3d62246f"
   name = "k8s.io/api"
   packages = [
     "admission/v1beta1",
@@ -729,12 +729,10 @@
     "authorization/v1beta1",
     "autoscaling/v1",
     "autoscaling/v2beta1",
-    "autoscaling/v2beta2",
     "batch/v1",
     "batch/v1beta1",
     "batch/v2alpha1",
     "certificates/v1beta1",
-    "coordination/v1beta1",
     "core/v1",
     "events/v1beta1",
     "extensions/v1beta1",
@@ -752,11 +750,11 @@
     "storage/v1beta1",
   ]
   pruneopts = "T"
-  revision = "b503174bad5991eb66f18247f52e41c3258f6348"
-  version = "kubernetes-1.12.3"
+  revision = "072894a440bdee3a891dea811fe42902311cd2a3"
+  version = "kubernetes-1.11.0"
 
 [[projects]]
-  digest = "1:3d0ba42a7eaed76c293905ced94201752762c84481f76505ac2079e6f332ae2b"
+  digest = "1:5dd98eb1b9b9bb0552b7afc57e72a2d93cd209a7d6b5c89922a4728d0b46a799"
   name = "k8s.io/apiextensions-apiserver"
   packages = [
     "pkg/apis/apiextensions",
@@ -766,11 +764,11 @@
     "pkg/client/clientset/clientset/typed/apiextensions/v1beta1",
   ]
   pruneopts = "T"
-  revision = "0cd23ebeb6882bd1cdc2cb15fc7b2d72e8a86a5b"
-  version = "kubernetes-1.12.3"
+  revision = "3de98c57bc05a81cf463e0ad7a0af4cec8a5b510"
+  version = "kubernetes-1.11.0"
 
 [[projects]]
-  digest = "1:bcf693d144a1d98dabdb4ab3bf18fbde8b2f7ee86d2fd8a3f74fb6a035627550"
+  digest = "1:e2035d60919705a125feeb8b13926383aff8817634b2c4550743c19ca21f3b08"
   name = "k8s.io/apimachinery"
   packages = [
     "pkg/api/equality",
@@ -803,7 +801,6 @@
     "pkg/util/intstr",
     "pkg/util/json",
     "pkg/util/mergepatch",
-    "pkg/util/naming",
     "pkg/util/net",
     "pkg/util/runtime",
     "pkg/util/sets",
@@ -819,11 +816,11 @@
     "third_party/forked/golang/reflect",
   ]
   pruneopts = "T"
-  revision = "eddba98df674a16931d2d4ba75edc3a389bf633a"
-  version = "kubernetes-1.12.3"
+  revision = "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
+  version = "kubernetes-1.11.0"
 
 [[projects]]
-  digest = "1:5aa94390c366adc57a82b19ad4f99482ab8fbeca0a2ff7b09db12d7baf590e46"
+  digest = "1:483198a324ac2dfecf001702ccfe99c0ef4191a58a9fb67124ea91074f397aac"
   name = "k8s.io/client-go"
   packages = [
     "discovery",
@@ -841,12 +838,10 @@
     "kubernetes/typed/authorization/v1beta1",
     "kubernetes/typed/autoscaling/v1",
     "kubernetes/typed/autoscaling/v2beta1",
-    "kubernetes/typed/autoscaling/v2beta2",
     "kubernetes/typed/batch/v1",
     "kubernetes/typed/batch/v1beta1",
     "kubernetes/typed/batch/v2alpha1",
     "kubernetes/typed/certificates/v1beta1",
-    "kubernetes/typed/coordination/v1beta1",
     "kubernetes/typed/core/v1",
     "kubernetes/typed/events/v1beta1",
     "kubernetes/typed/extensions/v1beta1",
@@ -895,12 +890,11 @@
     "util/workqueue",
   ]
   pruneopts = "T"
-  revision = "d082d5923d3cc0bfbb066ee5fbdea3d0ca79acf8"
-  version = "kubernetes-1.12.3"
+  revision = "7d04d0e2a0a1a4d4a1cd6baa432a2301492e4e65"
+  version = "kubernetes-1.11.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:b11533d0d337c776e3ee4d59f86ca302a66a777b40a289d97cb59a638179f31e"
+  digest = "1:8ab487a323486c8bbbaa3b689850487fdccc6cbea8690620e083b2d230a4447e"
   name = "k8s.io/code-generator"
   packages = [
     "cmd/client-gen",
@@ -913,11 +907,11 @@
     "cmd/client-gen/types",
     "cmd/deepcopy-gen",
     "cmd/deepcopy-gen/args",
-    "pkg/namer",
     "pkg/util",
   ]
   pruneopts = "T"
-  revision = "3a2206dd6a78497deceb3ae058417fdeb2036c7e"
+  revision = "6702109cc68eb6fe6350b83e14407c8d7309fd1a"
+  version = "kubernetes-1.11.0"
 
 [[projects]]
   branch = "master"
@@ -944,8 +938,7 @@
   version = "v0.1.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:6a8d44ba2a0a3a1e5f5093692c1d3bedf281127751f5cc9c318c17ee6cc789c2"
+  digest = "1:d63314924baf829dc1d89e49ae634b88d05e6022d7999379e2e70a35fa2cfd87"
   name = "k8s.io/kube-aggregator"
   packages = [
     "pkg/apis/apiregistration",
@@ -955,7 +948,8 @@
     "pkg/client/clientset_generated/clientset/typed/apiregistration/v1",
   ]
   pruneopts = "T"
-  revision = "06e74d190feb9a7499ff746fb77782603ff9bed6"
+  revision = "bd6e1ad75c9758cad2069bb2f65880cf805ad8e9"
+  version = "kubernetes-1.11.0"
 
 [[projects]]
   branch = "master"
