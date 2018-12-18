@@ -48,19 +48,11 @@ required = [
   name = "k8s.io/apiserver"
   version = "kubernetes-1.11.0"
 
-[[override]]
-  name = "sigs.k8s.io/controller-runtime"
-  version = "v0.1.4"
-
 # STANZAS BELOW ARE GENERATED AND MAY BE WRITTEN - DO NOT MODIFY BELOW THIS LINE.
 
-[[constraint]]
-  name="sigs.k8s.io/controller-runtime"
-  version="v0.1.1"
-
-[[constraint]]
-  name="sigs.k8s.io/controller-tools"
-  version="v0.1.1"
+#[[constraint]]
+#  name="sigs.k8s.io/controller-tools"
+#  version="v0.1.1"
 
 # For dependency below: Refer to issue https://github.com/golang/dep/issues/1799
 [[override]]
@@ -80,6 +72,10 @@ version="v1.4.7"
   branch = "master"
   name = "github.com/openshift/library-go"
 
+#[[constraint]]
+#  branch = "master"
+#  name = "github.com/kubernetes/apiextensions-apiserver"
+
 [[constraint]]
-  branch = "master"
-  name = "github.com/kubernetes/apiextensions-apiserver"
+  name = "sigs.k8s.io/controller-runtime"
+  version = "0.1.7"

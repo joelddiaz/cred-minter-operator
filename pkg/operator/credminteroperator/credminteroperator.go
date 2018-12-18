@@ -24,10 +24,14 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	apiextensionsclientv1beta1 "github.com/kubernetes/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1beta1"
+	////apiextensionsclientv1beta1 "github.com/kubernetes/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1beta1"
 	credminterv1alpha1 "github.com/openshift/cred-minter-operator/pkg/apis/credminter/v1alpha1"
+
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
+	apistuff "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1beta1"
+
+	////apistuff "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/types/apiextensions/v1beta1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -44,6 +48,7 @@ import (
 
 	"github.com/openshift/library-go/pkg/operator/events"
 	"github.com/openshift/library-go/pkg/operator/resource/resourceapply"
+	"github.com/openshift/library-go/pkg/operator/resource/resourceread"
 
 	////credminterv1 "github.com/openshift/cred-minter-operator/pkg/apis/credminter/v1alpha1"
 	"github.com/openshift/cred-minter-operator/pkg/operator/assets"
@@ -107,7 +112,8 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 
 	credminterConfigReconciler.eventRecorder = setupEventRecorder(credminterConfigReconciler.kubeClient)
 
-	credminterConfigReconciler.apiExtClient, err = apiextensionsclientv1beta1.NewForConfig(mgr.GetConfig())
+	credminterConfigReconciler.apiExtClient, err = apistuff.NewForConfig(mgr.GetConfig())
+	////credminterConfigReconciler.apiExtClient, err = apiextensionsclientv1beta1.NewForConfig(mgr.GetConfig())
 	if err != nil {
 		return fmt.Errorf("error creating apiExtensionClient: %v", err)
 	}
@@ -140,9 +146,10 @@ var _ reconcile.Reconciler = &ReconcileCredMinterOperatorConfig{}
 // ReconcileCredMinterOperatorConfig reconciles a CredMinterOperatorConfig object
 type ReconcileCredMinterOperatorConfig struct {
 	client.Client
-	scheme        *runtime.Scheme
-	kubeClient    kubeclient.Interface
-	apiExtClient  apiextensionsclientv1beta1.ApiextensionsV1beta1Interface
+	scheme       *runtime.Scheme
+	kubeClient   kubeclient.Interface
+	apiExtClient apistuff.ApiextensionsV1beta1Interface
+	////apiExtClient  apiextensionsclientv1beta1.ApiextensionsV1beta1Interface
 	eventRecorder events.Recorder
 	imagePullSpec string
 }
@@ -227,11 +234,16 @@ func (r *ReconcileCredMinterOperatorConfig) Reconcile(request reconcile.Request)
 	return reconcile.Result{}, nil
 }
 
-func setupPreReqs(apiExtClient apiextensionsclientv1beta1.ApiextensionsV1beta1Interface, recorder events.Recorder) error {
+func setupPreReqs(apiExtClient apistuff.CustomResourceDefinitionsGetter, recorder events.Recorder) error {
 	// Install CRD for cred-minter
 	crd, _ := assets.Asset(credMinterCRD)
+	crdObj := resourceread.ReadCustomResourceDefinitionV1Beta1OrDie(crd)
 
-	resourceapply.ApplyCustomResourceDefinition(apiExtClient.CustomResourceDefinitions(), recorder, crd)
+	_, _, err := resourceapply.ApplyCustomResourceDefinition(apiExtClient, recorder, crdObj)
+	if err != nil {
+		log.Errorf("failed to apply CRD: %v", err)
+		return err
+	}
 
 	return nil
 }

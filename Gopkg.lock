@@ -960,7 +960,7 @@
   revision = "0317810137be915b9cf888946c6e115c1bfac693"
 
 [[projects]]
-  digest = "1:63405fd0a9cf28d074f8ef07f133f818ee633ae874935a1ed52f73c36564dce9"
+  digest = "1:d1b7a6ed45c957e6308759f31fdbff8063741ecb08b7c3b6d67f0c9f4357b2ae"
   name = "sigs.k8s.io/controller-runtime"
   packages = [
     "pkg/cache",
@@ -969,17 +969,12 @@
     "pkg/client/apiutil",
     "pkg/client/config",
     "pkg/controller",
-    "pkg/controller/controllerutil",
-    "pkg/envtest",
-    "pkg/envtest/printer",
     "pkg/event",
     "pkg/handler",
     "pkg/internal/controller",
-    "pkg/internal/controller/metrics",
     "pkg/internal/recorder",
     "pkg/leaderelection",
     "pkg/manager",
-    "pkg/metrics",
     "pkg/patch",
     "pkg/predicate",
     "pkg/reconcile",
@@ -990,18 +985,13 @@
     "pkg/runtime/signals",
     "pkg/source",
     "pkg/source/internal",
-    "pkg/webhook",
     "pkg/webhook/admission",
     "pkg/webhook/admission/types",
-    "pkg/webhook/internal/cert",
-    "pkg/webhook/internal/cert/generator",
-    "pkg/webhook/internal/cert/writer",
-    "pkg/webhook/internal/cert/writer/atomic",
     "pkg/webhook/types",
   ]
-  pruneopts = "T"
-  revision = "c63ebda0bf4be5f0a8abd4003e4ea546032545ba"
-  version = "v0.1.8"
+  pruneopts = "NT"
+  revision = "5fd1e9e9fac5261e9ad9d47c375afc014fc31d21"
+  version = "v0.1.7"
 
 [[projects]]
   digest = "1:2518c407c98521579bcff2ca99dca0797cae36120bc47c32c7c929cf6c13a76a"
