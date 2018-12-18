@@ -230,6 +230,14 @@
   version = "v1.0.1"
 
 [[projects]]
+  branch = "master"
+  digest = "1:e723e2988514c07bf0fcec523405e1e83aefcb00920b9fdad94f413716a56486"
+  name = "github.com/kubernetes/apiextensions-apiserver"
+  packages = ["pkg/client/clientset/clientset/typed/apiextensions/v1beta1"]
+  pruneopts = "T"
+  revision = "bb0a52a3f19d114a7208187ac33b2f3756683174"
+
+[[projects]]
   digest = "1:3804a3a02964db8e6db3e5e7960ac1c1a9b12835642dd4f4ac4e56c749ec73eb"
   name = "github.com/markbates/inflect"
   packages = ["."]
@@ -324,8 +332,50 @@
   digest = "1:43376707ea2443d4d59265c5abd59dbb92d7e08c05f8162a6a06a19dbfff0ffa"
   name = "github.com/openshift/api"
   packages = [
+    ".",
+    "apps",
+    "apps/v1",
+    "authorization",
+    "authorization/v1",
+    "build",
+    "build/v1",
+    "config",
     "config/v1",
+    "image",
+    "image/docker10",
+    "image/dockerpre012",
+    "image/v1",
+    "kubecontrolplane",
+    "kubecontrolplane/v1",
+    "legacyconfig/v1",
+    "network",
+    "network/v1",
+    "oauth",
+    "oauth/v1",
+    "openshiftcontrolplane",
+    "openshiftcontrolplane/v1",
+    "operator",
     "operator/v1",
+    "operator/v1alpha1",
+    "osin",
+    "osin/v1",
+    "pkg/serialization",
+    "project",
+    "project/v1",
+    "quota",
+    "quota/v1",
+    "route",
+    "route/v1",
+    "security",
+    "security/v1",
+    "servicecertsigner",
+    "servicecertsigner/v1alpha1",
+    "template",
+    "template/v1",
+    "user",
+    "user/v1",
+    "webconsole",
+    "webconsole/v1",
   ]
   pruneopts = "T"
   revision = "83b2fe56301417028bd52e56edd75768e2ea051c"
@@ -334,7 +384,12 @@
   branch = "master"
   digest = "1:ce0416dfd0c72144ef1d99d8dd9c487eab725af4274836859aaaf85754bfc378"
   name = "github.com/openshift/library-go"
-  packages = ["pkg/operator/v1helpers"]
+  packages = [
+    "pkg/operator/events",
+    "pkg/operator/resource/resourceapply",
+    "pkg/operator/resource/resourcemerge",
+    "pkg/operator/v1alpha1helpers",
+  ]
   pruneopts = "T"
   revision = "b777fce1d621d4223e8fb2384d9b3a97debba24d"
 
@@ -683,6 +738,7 @@
     "core/v1",
     "events/v1beta1",
     "extensions/v1beta1",
+    "imagepolicy/v1alpha1",
     "networking/v1",
     "policy/v1beta1",
     "rbac/v1",
@@ -889,6 +945,20 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:6a8d44ba2a0a3a1e5f5093692c1d3bedf281127751f5cc9c318c17ee6cc789c2"
+  name = "k8s.io/kube-aggregator"
+  packages = [
+    "pkg/apis/apiregistration",
+    "pkg/apis/apiregistration/v1",
+    "pkg/apis/apiregistration/v1beta1",
+    "pkg/client/clientset_generated/clientset/scheme",
+    "pkg/client/clientset_generated/clientset/typed/apiregistration/v1",
+  ]
+  pruneopts = "T"
+  revision = "06e74d190feb9a7499ff746fb77782603ff9bed6"
+
+[[projects]]
+  branch = "master"
   digest = "1:90f16a49f856e6d94089444e487c535f4cd41f59a1e90c51deb9dcf965f3c50b"
   name = "k8s.io/kube-openapi"
   packages = ["pkg/util/proto"]
@@ -975,10 +1045,12 @@
   input-imports = [
     "github.com/emicklei/go-restful",
     "github.com/jteeuwen/go-bindata",
+    "github.com/kubernetes/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1beta1",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
     "github.com/openshift/api/operator/v1",
-    "github.com/openshift/library-go/pkg/operator/v1helpers",
+    "github.com/openshift/library-go/pkg/operator/events",
+    "github.com/openshift/library-go/pkg/operator/resource/resourceapply",
     "github.com/sirupsen/logrus",
     "golang.org/x/net/context",
     "k8s.io/api/apps/v1",
@@ -990,6 +1062,7 @@
     "k8s.io/apimachinery/pkg/runtime/schema",
     "k8s.io/apimachinery/pkg/types",
     "k8s.io/client-go/dynamic",
+    "k8s.io/client-go/kubernetes",
     "k8s.io/client-go/kubernetes/scheme",
     "k8s.io/client-go/plugin/pkg/client/auth/gcp",
     "k8s.io/client-go/rest",

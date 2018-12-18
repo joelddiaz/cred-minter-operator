@@ -24,6 +24,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	apiextensionsclientv1beta1 "github.com/kubernetes/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1beta1"
 	credminterv1alpha1 "github.com/openshift/cred-minter-operator/pkg/apis/credminter/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -42,13 +43,16 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
 	"github.com/openshift/library-go/pkg/operator/events"
+	"github.com/openshift/library-go/pkg/operator/resource/resourceapply"
+
 	////credminterv1 "github.com/openshift/cred-minter-operator/pkg/apis/credminter/v1alpha1"
-	////"github.com/openshift/cred-minter-operator/pkg/operator/assets"
+	"github.com/openshift/cred-minter-operator/pkg/operator/assets"
 	////"github.com/openshift/library-go/pkg/operator/v1helpers"
 )
 
 const (
 	operatorNamespace = "cred-minter-operator-system"
+	credMinterCRD     = "config/crds/credminter_v1beta1_credentialsrequest.yaml"
 )
 
 /**
@@ -103,6 +107,11 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 
 	credminterConfigReconciler.eventRecorder = setupEventRecorder(credminterConfigReconciler.kubeClient)
 
+	credminterConfigReconciler.apiExtClient, err = apiextensionsclientv1beta1.NewForConfig(mgr.GetConfig())
+	if err != nil {
+		return fmt.Errorf("error creating apiExtensionClient: %v", err)
+	}
+
 	// Create a new controller
 	c, err := controller.New("credminteroperator-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
@@ -133,6 +142,7 @@ type ReconcileCredMinterOperatorConfig struct {
 	client.Client
 	scheme        *runtime.Scheme
 	kubeClient    kubeclient.Interface
+	apiExtClient  apiextensionsclientv1beta1.ApiextensionsV1beta1Interface
 	eventRecorder events.Recorder
 	imagePullSpec string
 }
@@ -155,6 +165,10 @@ func (r *ReconcileCredMinterOperatorConfig) Reconcile(request reconcile.Request)
 			return reconcile.Result{}, nil
 		}
 		// Error reading the object - requeue the request.
+		return reconcile.Result{}, err
+	}
+
+	if err = setupPreReqs(r.apiExtClient, r.eventRecorder); err != nil {
 		return reconcile.Result{}, err
 	}
 
@@ -211,6 +225,15 @@ func (r *ReconcileCredMinterOperatorConfig) Reconcile(request reconcile.Request)
 		}
 	}
 	return reconcile.Result{}, nil
+}
+
+func setupPreReqs(apiExtClient apiextensionsclientv1beta1.ApiextensionsV1beta1Interface, recorder events.Recorder) error {
+	// Install CRD for cred-minter
+	crd, _ := assets.Asset(credMinterCRD)
+
+	resourceapply.ApplyCustomResourceDefinition(apiExtClient.CustomResourceDefinitions(), recorder, crd)
+
+	return nil
 }
 
 func setupEventRecorder(kubeClient kubeclient.Interface) events.Recorder {
