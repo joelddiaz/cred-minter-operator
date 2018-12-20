@@ -56,8 +56,11 @@ import (
 )
 
 const (
-	operatorNamespace = "cred-minter-operator-system"
-	credMinterCRD     = "config/crds/credminter_v1beta1_credentialsrequest.yaml"
+	operatorNamespace            = "openshift-cred-minter-operator"
+	credMinterNamespace          = "openshift-cred-minter"
+	credMinterCustomResourceYAML = "config/cred-minter-yaml/crds/credminter_v1beta1_credentialsrequest.yaml"
+	clusterRoleYAML              = "config/cred-minter-yaml/rbac/rbac_role.yaml"
+	clusterRoleBindingYAML       = "config/cred-minter-yaml/rbac/rbac_role_binding.yaml"
 )
 
 /**
@@ -175,7 +178,7 @@ func (r *ReconcileCredMinterOperatorConfig) Reconcile(request reconcile.Request)
 		return reconcile.Result{}, err
 	}
 
-	if err = setupPreReqs(r.apiExtClient, r.eventRecorder); err != nil {
+	if err = r.setupPreReqs(); err != nil {
 		return reconcile.Result{}, err
 	}
 
@@ -183,8 +186,9 @@ func (r *ReconcileCredMinterOperatorConfig) Reconcile(request reconcile.Request)
 	// Define the desired Deployment object
 	deploy := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      instance.Name + "-deployment",
-			Namespace: instance.Namespace,
+			Name: instance.Name + "-deployment",
+			////Namespace: instance.Namespace,
+			Namespace: credMinterNamespace,
 		},
 		Spec: appsv1.DeploymentSpec{
 			Selector: &metav1.LabelSelector{
@@ -234,14 +238,48 @@ func (r *ReconcileCredMinterOperatorConfig) Reconcile(request reconcile.Request)
 	return reconcile.Result{}, nil
 }
 
-func setupPreReqs(apiExtClient apistuff.CustomResourceDefinitionsGetter, recorder events.Recorder) error {
-	// Install CRD for cred-minter
-	crd, _ := assets.Asset(credMinterCRD)
+func (r *ReconcileCredMinterOperatorConfig) setupPreReqs() error {
+	// Create namespace for cred-minter to live in
+	namespace := &corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: credMinterNamespace,
+		},
+	}
+	_, _, err := resourceapply.ApplyNamespace(r.kubeClient.CoreV1(), r.eventRecorder, namespace)
+	if err != nil {
+		log.Errorf("error creating namespace: %v", err)
+		return err
+	}
+
+	// CRD for cred-minter
+	crd, _ := assets.Asset(credMinterCustomResourceYAML)
 	crdObj := resourceread.ReadCustomResourceDefinitionV1Beta1OrDie(crd)
 
-	_, _, err := resourceapply.ApplyCustomResourceDefinition(apiExtClient, recorder, crdObj)
+	_, _, err = resourceapply.ApplyCustomResourceDefinition(r.apiExtClient, r.eventRecorder, crdObj)
 	if err != nil {
 		log.Errorf("failed to apply CRD: %v", err)
+		return err
+	}
+
+	// ClusterRole with permissions for cred-minter
+	clusterRole, _ := assets.Asset(clusterRoleYAML)
+	clusterRoleObj := resourceread.ReadClusterRoleV1OrDie(clusterRole)
+
+	rbacClient := r.kubeClient.RbacV1()
+	_, _, err = resourceapply.ApplyClusterRole(rbacClient, r.eventRecorder, clusterRoleObj)
+	if err != nil {
+		log.Errorf("failed to apply cluster role: %v", err)
+		return err
+	}
+
+	// Bind the above role to the serviceaccount in the cred-minter namespace
+	clusterRoleBinding, _ := assets.Asset(clusterRoleBindingYAML)
+	clusterRoleBindingObj := resourceread.ReadClusterRoleBindingV1OrDie(clusterRoleBinding)
+	log.Printf("SUBJECT: %+v", clusterRoleBindingObj)
+
+	_, _, err = resourceapply.ApplyClusterRoleBinding(rbacClient, r.eventRecorder, clusterRoleBindingObj)
+	if err != nil {
+		log.Errorf("failed to apply cluster role binding: %v", err)
 		return err
 	}
 

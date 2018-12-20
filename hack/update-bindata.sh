@@ -17,5 +17,5 @@ go build -o ./bin/go-bindata ./vendor/github.com/jteeuwen/go-bindata/go-bindata
 	-ignore "OWNERS" \
 	-ignore "samples" \
 	-ignore ".*\.sw.?" \
-	./config/crds/ && \
+	./config/cred-minter-yaml/... && \
 gofmt -s -w "${OUTPUT_FILE}"
